@@ -1,6 +1,7 @@
 package gg.rsmod.game.service.serializer.json
 
 import gg.rsmod.game.model.social.Social
+import gg.rsmod.game.model.songs.Song
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.model.varp.Varp
 
@@ -12,9 +13,9 @@ import gg.rsmod.game.model.varp.Varp
 data class JsonPlayerSaveData(val passwordHash: String, val username: String, val displayName: String,
                               val previousXteas: IntArray, val x: Int, val z: Int, val height: Int, val privilege: Int, val bhpoints: Int,
                               val displayMode: Int, val runEnergy: Double, val appearance: JsonPlayerSerializer.PersistentAppearance,
-                              val skills: List<JsonPlayerSerializer.PersistentSkill>,val attributes: Map<String, Any>,
+                              val skills: List<JsonPlayerSerializer.PersistentSkill>, val attributes: Map<String, Any>,
                               val timers: List<TimerMap.PersistentTimer>, val itemContainers: List<JsonPlayerSerializer.PersistentContainer>,
-                              val varps: List<Varp>, var social: Social) {
+                              val varps: List<Varp>, val songs: List<Song>, var social: Social) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -39,6 +40,7 @@ data class JsonPlayerSaveData(val passwordHash: String, val username: String, va
         if (timers != other.timers) return false
         if (itemContainers != other.itemContainers) return false
         if (varps != other.varps) return false
+        if (songs != other.songs) return false
         if (social != other.social) return false
 
         return true
@@ -62,6 +64,7 @@ data class JsonPlayerSaveData(val passwordHash: String, val username: String, va
         result = 31 * result + timers.hashCode()
         result = 31 * result + itemContainers.hashCode()
         result = 31 * result + varps.hashCode()
+        result = 31 * result + songs.hashCode()
         result = 31 * result + social.hashCode()
         return result
     }

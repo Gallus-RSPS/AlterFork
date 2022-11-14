@@ -4,6 +4,7 @@
  */
 on_button(AccountTab.BUTTON_ID, AccountTab.UPGRADE_NOW_ID){
     //player.openUrl("https://github.com/AlterRSPS/Alter")
+    player.openUrl("https://www.google.com")
     player.message("Placeholder for upgrade now button")
 }
 on_button(AccountTab.BUTTON_ID, AccountTab.BENEFITS_ID){

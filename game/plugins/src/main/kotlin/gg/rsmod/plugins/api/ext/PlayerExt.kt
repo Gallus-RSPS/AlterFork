@@ -23,6 +23,7 @@ import gg.rsmod.plugins.api.*
 import gg.rsmod.plugins.api.cfg.Varbits
 import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.content.music.Songs
+import gg.rsmod.plugins.content.quests.QuestTab
 import gg.rsmod.plugins.service.marketvalue.ItemMarketValueService
 import gg.rsmod.util.BitManipulation
 
@@ -30,6 +31,8 @@ import gg.rsmod.util.BitManipulation
  * The interface key used by inventory overlays
  */
 const val INVENTORY_INTERFACE_KEY = 93
+
+private var lastChild = 0
 
 /**
  * The id of the script used to initialise the interface overlay options. The 'big' variant of this script
@@ -107,7 +110,12 @@ fun Player.setInterfaceEvents(interfaceId: Int, component: Int, range: IntRange,
 }
 
 fun Player.setComponentText(interfaceId: Int, component: Int, text: String) {
-    write(IfSetTextMessage(interfaceId, component, text))
+    write(IfSetTextMessage(interfaceId, component, text.appendColors()))
+}
+
+fun Player.line(text: String, child: Int? = null) {
+    write(IfSetTextMessage(QuestTab.QUEST_JOURNAL_INTERFACE_ID, child ?: (lastChild + 1), text.appendColors()))
+    lastChild = child ?: (lastChild + 1)
 }
 
 fun Player.setComponentHidden(interfaceId: Int, component: Int, hidden: Boolean) {
@@ -371,6 +379,13 @@ fun Player.playSong(id: Int) {
 
 fun Player.playJingle(id: Int) {
     write(MidiJingleMessage(id))
+}
+
+fun Player.getSong(slot: Int): Int = songs.getUnlocked(slot)
+
+
+fun Player.setSong(slot: Int, value: Int) {
+    songs.setUnlocked(slot, value)
 }
 
 fun Player.getVarp(id: Int): Int = varps.getState(id)

@@ -19,6 +19,7 @@ import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.social.Social
+import gg.rsmod.game.model.songs.SongSet
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.FORCE_DISCONNECTION_TIMER
 import gg.rsmod.game.model.varp.VarpSet
@@ -69,6 +70,11 @@ open class Player(world: World) : Pawn(world) {
      * @see Privilege
      */
     var privilege = Privilege.DEFAULT
+
+    /**
+     * Represents all quests in the game
+     */
+    val songs = SongSet(maxSongs = world.gameContext.songs)
 
     /**
      * The base region [Coordinate] is the most bottom-left (south-west) tile where
@@ -405,6 +411,15 @@ open class Player(world: World) : Pawn(world) {
                 write(UpdateStatMessage(skill = i, level = getSkills().getCurrentLevel(i), xp = getSkills().getCurrentXp(i).toInt()))
                 getSkills().clean(i)
             }
+        }
+    }
+
+    fun checkRegionChange() {
+        val oldRegion = lastTile?.regionId ?: -1
+        if (oldRegion != tile.regionId) {
+            if (oldRegion != -1)
+                world.plugins.executeRegionExit(this, oldRegion)
+            world.plugins.executeRegionEnter(this, tile.regionId)
         }
     }
 

@@ -124,6 +124,9 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             data.varps.forEach { varp ->
                 client.varps.setState(varp.id, varp.state)
             }
+            data.songs.forEach { song ->
+                client.songs.setUnlocked(song.id, song.unlocked)
+            }
 
             if (data.social == null)
                 data.social = Social()
@@ -143,7 +146,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
                 privilege = client.privilege.id, bhpoints = client.bountypoints, runEnergy = client.runEnergy, displayMode = client.interfaces.displayMode.id,
                 appearance = client.getPersistentAppearance(), skills = client.getPersistentSkills(), itemContainers = client.getPersistentContainers(),
                 attributes = client.attr.toPersistentMap(), timers = client.timers.toPersistentTimers(),
-                varps = client.varps.getAll().filter { it.state != 0 }, social = client.social)
+                varps = client.varps.getAll().filter { it.state != 0 }, songs = client.songs.getAll().filter {it.unlocked != 0 }, social = client.social)
         val writer = Files.newBufferedWriter(path.resolve(client.loginUsername))
         val json = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
         json.toJson(data, writer)
